@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mi Motor - Núcleo</title>
+<style>
+  /* El motor se adapta al tamaño de su contenedor, para poder ser embebido */
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #1a1a1a;
+    overflow: hidden;
+  }
+  #motor-contenedor {
+    width: 100%;
+    height: 100vh; /* Cuando se embeba, el contenedor externo definirá el tamaño real */
+  }
+</style>
+</head>
+<body>
+
+  <!-- Este div es donde vive el motor. Al embeber, solo hace falta este contenedor -->
+  <div id="motor-contenedor"></div>
+
+  <!-- Librería gráfica de base (no forma parte de "nuestro" código) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
+
+  <!-- NÚCLEO DEL MOTOR: no sabe nada de tierra/pasto/cristal -->
+  <script src="nucleo/bloques.js"></script>
+  <script src="nucleo/motor.js"></script>
+
+  <!-- CONFIGURACIÓN: acá es donde se define el juego en sí -->
+  <script src="config-ejemplo.js"></script>
+
+</body>
+</html>
