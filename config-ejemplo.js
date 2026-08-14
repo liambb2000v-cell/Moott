@@ -36,10 +36,35 @@ Bloques.registrar('cristal_fragil', {
   },
 });
 
+// Ejemplo de bloque con TEXTURA POR MATRIZ: en vez de un color plano,
+// esta imagen (armada a mano acá, hasta que tengamos el editor con
+// carga de archivos) define la forma real del bloque: un arbolito.
+// v = verde (copa), m = marrón (tronco), n = transparente (no dibuja nada)
+const v = 0x4caf50;
+const m = 0x795548;
+const n = null;
+
+Bloques.registrar('arbol', {
+  visible: true,
+  solido: true, // por ahora, colisiona como un rectángulo simple (la hitbox)
+  matrizTextura: [
+    [n, n, v, v, v, v, n, n],
+    [n, v, v, v, v, v, v, n],
+    [v, v, v, v, v, v, v, v],
+    [v, v, v, v, v, v, v, v],
+    [n, v, v, v, v, v, v, n],
+    [n, n, n, m, m, n, n, n],
+    [n, n, n, m, m, n, n, n],
+    [n, n, n, m, m, n, n, n],
+    [n, n, n, m, m, n, n, n],
+    [n, n, n, m, m, n, n, n],
+  ],
+});
+
 // --- Definimos el mundo de prueba usando los ids registrados ---
 
 const mundoDePrueba = [
-  ['aire','aire','aire','aire','aire','aire','aire','aire','aire','aire'],
+  ['aire','aire','aire','aire','aire','aire','arbol','aire','aire','aire'],
   ['aire','aire','aire','aire','aire','aire','aire','aire','aire','aire'],
   ['aire','aire','aire','cristal_fragil','aire','aire','aire','aire','aire','aire'],
   ['aire','aire','aire','aire','aire','aire','aire','aire','aire','aire'],
@@ -86,3 +111,4 @@ function mostrarHudDeDepuracion(contenedor, esquema) {
       `accion: ${s.accion}`;
   }, 100);
 }
+
