@@ -27,6 +27,8 @@ Bloques._registro = {};
 Bloques.EMPTY_BLOCK = {
   // --- Apariencia ---
   textura: null,      // ruta a la imagen del bloque, o null si no se dibuja
+  matrizTextura: null, // alternativa a "textura": una matriz de píxeles que define
+                        // la FORMA real del bloque (ver nucleo/minibloques.js)
   colorProvisional: null, // color plano de prueba, por si aún no hay textura
 
   // --- Física / comportamiento base ---
@@ -88,3 +90,4 @@ Bloques.obtener = function (id) {
 // Registramos el bloque "aire" por defecto usando el propio molde vacío,
 // así siempre existe un bloque de id "aire" para representar espacio vacío.
 Bloques.registrar('aire', {});
+
