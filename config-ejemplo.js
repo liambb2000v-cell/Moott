@@ -64,10 +64,10 @@ Bloques.registrar('arbol', {
 // --- Definimos el mundo de prueba usando los ids registrados ---
 
 const mundoDePrueba = [
-  ['aire','aire','aire','aire','aire','aire','arbol','aire','aire','aire'],
+  ['aire','aire','aire','aire','aire','aire','aire','aire','aire','aire'],
   ['aire','aire','aire','aire','aire','aire','aire','aire','aire','aire'],
   ['aire','aire','aire','cristal_fragil','aire','aire','aire','aire','aire','aire'],
-  ['aire','aire','aire','aire','aire','aire','aire','aire','aire','aire'],
+  ['aire','arbol','aire','aire','aire','aire','aire','aire','aire','aire'],
   ['pasto','pasto','pasto','pasto','pasto','pasto','pasto','pasto','pasto','pasto'],
   ['tierra','tierra','tierra','tierra','tierra','tierra','tierra','tierra','tierra','tierra'],
   ['tierra','tierra','tierra','tierra','tierra','tierra','tierra','tierra','tierra','tierra'],
@@ -111,4 +111,3 @@ function mostrarHudDeDepuracion(contenedor, esquema) {
       `accion: ${s.accion}`;
   }, 100);
 }
-
