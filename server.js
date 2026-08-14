@@ -19,7 +19,17 @@ const PUERTO = process.env.PORT || 3000; // Render asigna el puerto por variable
 
 // Sirve todos los archivos de esta carpeta (index.html, nucleo/, etc.)
 // tal cual están, sin necesidad de nada más.
-app.use(express.static(path.join(__dirname)));
+//
+// setHeaders desactiva el cacheo del navegador: mientras estamos
+// desarrollando el motor, los archivos cambian todo el tiempo, y no
+// queremos que el navegador se quede mostrando una versión vieja.
+app.use(express.static(path.join(__dirname), {
+  etag: false,
+  lastModified: false,
+  setHeaders: (res) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  },
+}));
 
 // --------------------------------------------------------
 // Acá abajo, más adelante, van a ir las rutas de API. Por ejemplo:
