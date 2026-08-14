@@ -32,6 +32,7 @@
     padding: 8px;
     z-index: 9999;
     white-space: pre-wrap;
+    display: none; /* oculto por defecto: solo se muestra si hay un error */
   }
   #panel-diagnostico .linea-error {
     color: #ffb3b3;
@@ -53,7 +54,10 @@
     function diagnostico(mensaje, esError) {
       const panel = document.getElementById('panel-diagnostico');
       const linea = document.createElement('div');
-      if (esError) linea.className = 'linea-error';
+      if (esError) {
+        linea.className = 'linea-error';
+        panel.style.display = 'block'; // un error real: recién ahí mostramos el panel
+      }
       linea.textContent = (esError ? 'ERROR: ' : 'OK: ') + mensaje;
       panel.appendChild(linea);
     }
