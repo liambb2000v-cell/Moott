@@ -17,67 +17,83 @@
     width: 100%;
     height: 100vh; /* Cuando se embeba, el contenedor externo definirá el tamaño real */
   }
-  /* Panel temporal para mostrar errores en pantalla (para depurar desde el celular) */
-  #panel-errores {
+  /* Panel temporal para mostrar diagnóstico en pantalla (para depurar desde el celular) */
+  #panel-diagnostico {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     max-height: 60vh;
     overflow-y: auto;
-    background: #300;
-    color: #ffb3b3;
+    background: #111;
+    color: #9be7ff;
     font-family: monospace;
-    font-size: 12px;
+    font-size: 11px;
     padding: 8px;
     z-index: 9999;
     white-space: pre-wrap;
-    display: none; /* se muestra solo si hay al menos un error */
+  }
+  #panel-diagnostico .linea-error {
+    color: #ffb3b3;
   }
 </style>
 </head>
 <body>
 
-  <!-- Panel de errores: normalmente invisible, aparece solo si algo falla -->
-  <div id="panel-errores"></div>
+  <!-- Panel de diagnóstico: muestra el progreso de carga y cualquier error -->
+  <div id="panel-diagnostico"></div>
 
   <!-- Este div es donde vive el motor. Al embeber, solo hace falta este contenedor -->
   <div id="motor-contenedor"></div>
 
   <script>
-    // Capturamos cualquier error de JavaScript y lo mostramos en pantalla,
-    // ya que en el celular no es fácil abrir la consola del navegador.
+    // Función global simple para escribir una línea en el panel de diagnóstico.
+    // Cada archivo del núcleo la llama al terminar de cargarse, así vemos
+    // exactamente hasta dónde llegó el proceso si algo falla.
+    function diagnostico(mensaje, esError) {
+      const panel = document.getElementById('panel-diagnostico');
+      const linea = document.createElement('div');
+      if (esError) linea.className = 'linea-error';
+      linea.textContent = (esError ? 'ERROR: ' : 'OK: ') + mensaje;
+      panel.appendChild(linea);
+    }
+
+    // Errores de JavaScript (código que se ejecuta y falla)
     window.addEventListener('error', function (evento) {
-      const panel = document.getElementById('panel-errores');
-      panel.style.display = 'block';
-      const detalle = evento.filename
-        ? `${evento.message}\n  en ${evento.filename}:${evento.lineno}`
-        : evento.message;
-      panel.textContent += 'ERROR: ' + detalle + '\n\n';
-    });
+      // evento.error existe para errores de código; si no existe, puede ser
+      // un fallo de carga de recurso (como un <script src> que dio 404),
+      // que llega acá gracias al "true" de abajo (fase de captura).
+      if (evento.error) {
+        diagnostico(`${evento.message} (${evento.filename}:${evento.lineno})`, true);
+      } else if (evento.target && evento.target.tagName === 'SCRIPT') {
+        diagnostico(`No se pudo cargar el archivo: ${evento.target.src}`, true);
+      }
+    }, true); // true = fase de captura, necesario para pescar errores de carga de <script>
   </script>
 
   <!-- Librería gráfica de base (no forma parte de "nuestro" código) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
+  <script>diagnostico('PixiJS ' + (typeof PIXI !== 'undefined' ? 'cargado' : 'NO cargado'), typeof PIXI === 'undefined');</script>
 
   <!-- NÚCLEO DEL MOTOR: no sabe nada de tierra/pasto/cristal -->
   <script src="nucleo/bloques.js"></script>
+  <script>diagnostico('bloques.js ' + (typeof Bloques !== 'undefined' ? 'cargado' : 'NO cargado'), typeof Bloques === 'undefined');</script>
+
+  <script src="nucleo/minibloques.js"></script>
+  <script>diagnostico('minibloques.js ' + (typeof MiniBloques !== 'undefined' ? 'cargado' : 'NO cargado'), typeof MiniBloques === 'undefined');</script>
+
   <script src="nucleo/motor.js"></script>
+  <script>diagnostico('motor.js ' + (typeof MiMotor !== 'undefined' ? 'cargado' : 'NO cargado'), typeof MiMotor === 'undefined');</script>
+
   <script src="nucleo/input.js"></script>
+  <script>diagnostico('input.js ' + (typeof Input !== 'undefined' ? 'cargado' : 'NO cargado'), typeof Input === 'undefined');</script>
+
   <script src="nucleo/pantalla-seleccion.js"></script>
+  <script>diagnostico('pantalla-seleccion.js ' + (typeof PantallaSeleccion !== 'undefined' ? 'cargado' : 'NO cargado'), typeof PantallaSeleccion === 'undefined');</script>
 
   <!-- CONFIGURACIÓN: acá es donde se define el juego en sí -->
   <script src="config-ejemplo.js"></script>
-
-  <script>
-    // Chequeo extra: si PIXI no llegó a cargar (por ejemplo, el CDN falló),
-    // lo avisamos explícitamente en el panel de errores.
-    if (typeof PIXI === 'undefined') {
-      const panel = document.getElementById('panel-errores');
-      panel.style.display = 'block';
-      panel.textContent += 'ERROR: la librería PIXI no se cargó (revisar conexión al CDN).\n\n';
-    }
-  </script>
+  <script>diagnostico('config-ejemplo.js ejecutado hasta el final');</script>
 
 </body>
 </html>
