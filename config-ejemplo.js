@@ -49,9 +49,40 @@ const mundoDePrueba = [
   ['tierra','tierra','tierra','tierra','tierra','tierra','tierra','tierra','tierra','tierra'],
 ];
 
-// --- Arrancamos el motor con este mundo ---
-// (si esta página se embebe en otro sitio, quien la embeba podría
-// llamar a MiMotor.iniciar con OTRO mundo y otros bloques distintos)
+// --- Antes de arrancar, preguntamos PC o Mobile ---
+// Esto activa el esquema de controles correspondiente (nucleo/input.js)
+// y recién después arranca el motor con el mundo de prueba.
 
 const contenedor = document.getElementById('motor-contenedor');
-MiMotor.iniciar(contenedor, { mundo: mundoDePrueba });
+
+PantallaSeleccion.mostrar(contenedor, function (esquemaElegido) {
+  Input.iniciar(esquemaElegido, contenedor);
+  MiMotor.iniciar(contenedor, { mundo: mundoDePrueba });
+  mostrarHudDeDepuracion(contenedor, esquemaElegido);
+});
+
+// --- HUD de depuración temporal ---
+// Solo para confirmar visualmente que el esquema elegido funciona:
+// muestra en texto qué señales de Input están activas ahora mismo.
+function mostrarHudDeDepuracion(contenedor, esquema) {
+  const hud = document.createElement('div');
+  hud.style.position = 'absolute';
+  hud.style.top = '8px';
+  hud.style.left = '8px';
+  hud.style.color = '#fff';
+  hud.style.fontFamily = 'monospace';
+  hud.style.fontSize = '12px';
+  hud.style.background = 'rgba(0,0,0,0.5)';
+  hud.style.padding = '6px';
+  hud.style.zIndex = '150';
+  contenedor.appendChild(hud);
+
+  setInterval(() => {
+    const s = Input.estado;
+    hud.textContent =
+      `Esquema: ${esquema}\n` +
+      `izquierda: ${s.izquierda}  derecha: ${s.derecha}\n` +
+      `arriba: ${s.arriba}  abajo: ${s.abajo}\n` +
+      `accion: ${s.accion}`;
+  }, 100);
+}
