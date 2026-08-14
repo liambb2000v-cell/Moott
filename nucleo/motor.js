@@ -60,7 +60,10 @@ MiMotor.iniciar = function (elementoContenedor, opciones) {
 
     let grafico;
 
-    if (bloque.textura) {
+    if (bloque.matrizTextura) {
+      // La textura define la forma real del bloque (minibloques)
+      grafico = MiniBloques.generarDesdeMatriz(bloque.matrizTextura);
+    } else if (bloque.textura) {
       // Si el bloque tiene una imagen asignada, la usamos
       grafico = PIXI.Sprite.from(bloque.textura);
       grafico.width = MiMotor.TAMANO_TILE;
