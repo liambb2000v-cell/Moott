@@ -1,0 +1,12 @@
+{
+  "name": "motor-terraria",
+  "version": "1.0.0",
+  "description": "Motor de juegos 2D por bloques, embebible, con nucleo modificable via JS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
